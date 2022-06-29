@@ -93,7 +93,7 @@ Refer below sample
 ```yaml
 {
   "data": {
-    "name": "xyz",
+    "name"xyz",: "
     "fullName": "Some Institute of Engineering and Technology",
     "logoLink": "some public s3 link for a college logo",
     "interns": [

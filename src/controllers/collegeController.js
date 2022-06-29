@@ -45,9 +45,25 @@ const createCollege = async function(req, res){
 
 
 const collegeDetails = async function(req,res){
-    let data=req.query
+    let collegeName=req.query.collegeName
 
-    const {name,collegeName}=data
+    if(!collegeName){return res.status(400).send({status:false,msg:"Collegename is required."})}
+
+    let getCollegeName=await collegeModel.findOne({name:collegeName})
+    if(!getCollegeName){return res.status(400).send({status:false,msg:"Collegename is not listed."})}
+    
+    console.log(getCollegeName)
+   
+    let getIntern=await internModel.find({collegeId:getCollegeName._id}).select({name:1,email:1,mobile:1,_id:1})
+    console.log(getIntern)
+    
+
+    let result={name:getCollegeName.name,fullName:getCollegeName.fullName,logoLink:getCollegeName.logoLink,interns:[getIntern]}
+    res.status(200).send({status:true, data:result})
+
+
+    
+
 
 }
-module.exports.createCollege = createCollege
+module.exports={createCollege, collegeDetails}
