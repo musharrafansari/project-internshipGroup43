@@ -1,5 +1,5 @@
-const collegeModel = require("../models/colegeModel");
-const isUrlValid = require('url-validation');
+const collegeModel = require("../models/collegeModel");
+const internModel = require("../models/internModel")
 const { default: mongoose } = require("mongoose");
 
 const isValid = function (value) {
@@ -8,25 +8,33 @@ const isValid = function (value) {
     if (typeof value === Number && value.trim().length === 0) return false
     return true
 }
+// function ValidURL(str) {
+//     var regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+// }
+
+      
+      
   
 const createCollege = async function(req, res){
     try{
-    let body = req.body;
-    let {name, fullName, logoLink} = body;
+    let data = req.body;
+    let {name, fullName, logoLink} = data;
 
-    if(mongoose.Object.keys(body) == 0){
-        return res.status(400).send({status: false, msg:"Data is required"});
+    if(Object.keys(data).length == 0){
+        return res.status(400).send({status: false, msg:"Data is required"}); 
     }
-    if(!isValid(name)){
-        return res.status(403).send({status: false, msg: "Enter valid name"});
-    }
-    if(!isValid(fullName)){
-        return res.status(403).send({status: false, msg: "Enter valid Full name"});
-    }
-    if(!isUrlValid(logoLink)){
-        return res.status(403).send({status: false, msg: "Enter valid URL"})
-    }
-    const collegeData = await collegeModel.create(body);
+
+    if (!name) { return res.status(400).send({ status: false, msg: "Name is mandatory" }) }
+
+    if(!isValid(name)){ return res.status(400).send({status: false, msg: "Enter valid name"});}
+   
+    if (!fullName) { return res.status(400).send({ status: false, msg: "Full name is mandatory" }) } 
+    if(!isValid(fullName)){ return res.status(400).send({status: false, msg: "Enter valid Full name"}); }
+   
+    if (!logoLink) { return res.status(400).send({ status: false, msg: "Logolink is mandatory" }) }
+    if (!(/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/).test(logoLink)) { return res.status(400).send({ status: false, msg: "Enter a valid logolink." }) }
+   
+    let collegeData = await collegeModel.create(data)
     res.status(201).send({status: true, msg: "College Created successfully", data: collegeData});
     }
     catch(err){
@@ -34,4 +42,12 @@ const createCollege = async function(req, res){
     }
 }
 
-module.exports = {createCollege};
+
+
+const collegeDetails = async function(req,res){
+    let data=req.query
+
+    const {name,collegeName}=data
+
+}
+module.exports.createCollege = createCollege
