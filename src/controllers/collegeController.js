@@ -72,4 +72,5 @@ const collegeDetails = async function (req, res) {
   };
   res.status(200).send({ status: true, data: result });
 };
+
 module.exports = { createCollege, collegeDetails };

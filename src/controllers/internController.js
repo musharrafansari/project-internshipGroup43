@@ -1,12 +1,13 @@
 const internModel = require("../models/internModel");
 const { default: mongoose } = require("mongoose");
+const collegeModel = require("../models/collegeModel");
 
-const isValid = function (value) {
-  if (typeof value === "undefined" || value === null) return false;
-  if (typeof value === "string" && value.trim().length === 0) return false;
-  if (typeof value === Number && value.trim().length === 0) return false;
-  return true;
-};
+// const isValid = function (value) {
+//   if (typeof value === "undefined" || value === null) return false;
+//   if (typeof value === "string" && value.trim().length === 0) return false;
+//   if (typeof value === Number && value.trim().length === 0) return false;
+//   return true;
+// };
 
 const createIntern = async function (req, res) {
   try {
@@ -21,14 +22,14 @@ const createIntern = async function (req, res) {
     if (!name) {
       return res.status(400).send({ status: false, msg: "name is mandatory" });
     }
-    if (!/^[a-zA-Z_]+$/.test(name.trim())) {
+    if (!/^[a-zA-Z_ ]+$/.test(name.trim())) {
       return res.status(400).send({ status: false, msg: "Enter valid name." });
     }
 
     if (!email) {
       return res.status(400).send({ status: false, msg: "email is mandatory." });
     }
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email.trim())) {
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.trim())) {
       return res.status(400).send({ status: false, msg: "Enter a valid emailId." });
     }
     let getEmail = await internModel.findOne({ email });
@@ -47,6 +48,11 @@ const createIntern = async function (req, res) {
       return res.status(400).send({status: false, msg: "Mobile no. is already present.Enter a new moile no.",});
     }
 
+    let getCollege = await collegeModel.find({_id: collegeName});
+    if(!getCollege){
+        return res.status(400).send({status: false, msg: "No college is listed with that CollegeId"});
+    }
+
     let internData = await internModel.create(data);
     res.status(201).send({status: true, msg: "Intern Created successfully", data: internData,});
   } catch (err) {
@@ -54,4 +60,4 @@ const createIntern = async function (req, res) {
   }
 };
 
-module.exports.createIntern = createIntern;
+module.exports = {createIntern};
