@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 const collegeSchema = new mongoose.Schema({
     name: {type: String,
         unique: true,
-         require: true
+        require: true,
+        trim: true
     },
     fullName: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     logoLink: {
         type: String, 
