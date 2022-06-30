@@ -31,6 +31,7 @@ const createCollege = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Logo Link field is missing" });
     }
     //------------------------------[checking the Validation of the inputs]-------------------------------------
+    
     if(name.trim().length !== 0){
       if (!/^[a-z A-Z]+(-[a-z A-Z]+)?$/.test(name)) {
         return res.status(400).send({ status: false, msg: "Enter valid name" });
@@ -53,8 +54,10 @@ const createCollege = async function (req, res) {
     }
     //-------------------------[creating college document with the given inputs]--------------------------------------
 
-    let collegeData = await (await collegeModel.create(data));
-    res.status(201).send({ status: true, msg: "College Created successfully", data: collegeData, });
+    let collegeData = await collegeModel.create(data);
+    
+    let Data= await collegeModel.find(collegeData).select({name:1,fullName:1,logoLink:1,isDeleted:1,_id:0})
+    res.status(201).send({ status: true, msg: "College Created successfully", data:Data, });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
