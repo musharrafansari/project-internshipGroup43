@@ -50,14 +50,14 @@ const createCollege = async function (req, res) {
     }
     ///========================creating college with the given inputs=============================//////
 
-    let collegeData = await collegeModel.create(data);
+    let collegeData = await (await collegeModel.create(data));
     res.status(201).send({ status: true, msg: "College Created successfully", data: collegeData, });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
 };
 
-const collegeDetails = async function (req, res) {
+const collegeDetails = async function (req, res) { 
 
   let collegeName = req.query.collegeName;
 
