@@ -31,7 +31,7 @@ const createCollege = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Logo Link field is missing" });
     }
     //------------------------------[checking the Validation of the inputs]-------------------------------------
-    
+
     if(name.trim().length !== 0){
       if (!/^[a-z A-Z]+(-[a-z A-Z]+)?$/.test(name)) {
         return res.status(400).send({ status: false, msg: "Enter valid name" });
@@ -56,8 +56,8 @@ const createCollege = async function (req, res) {
 
     let collegeData = await collegeModel.create(data);
     
-    let Data= await collegeModel.find(collegeData).select({name:1,fullName:1,logoLink:1,isDeleted:1,_id:0})
-    res.status(201).send({ status: true, msg: "College Created successfully", data:Data, });
+    let responseData= await collegeModel.find(collegeData).select({name:1, fullName:1 ,logoLink:1, isDeleted:1, _id:0})
+    res.status(201).send({ status: true, msg: "College Created successfully", data: responseData });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
@@ -75,12 +75,13 @@ const collegeDetails = async function (req, res) {
 
   let collegeDetails = await collegeModel.findOne({ name: collegeName });
   if (!collegeDetails) {
-    return res.status(400).send({ status: false, msg: "Collegename is not listed" });
+    return res.status(400).send({ status: false, msg: "College is not listed" });
   }
   //-----------------------------finding the intern document with the college document id]-----------------------------------------
 
   let internDetails = await internModel.find({ collegeId: collegeDetails._id }).select({ name: 1, email: 1, mobile: 1, _id: 1 });
   if (internDetails.length==0) { return res.status(400).send({ status: false, msg: "No intern has applied for this college" }) }
+
   let result = {
     name: collegeDetails.name,
     fullName: collegeDetails.fullName,

@@ -28,8 +28,8 @@ const createIntern = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Please enter College name in order to apply for the Intern" });
     }
     //----------------------------[checking the format of the inputs]----------------------------------------------
-    
-    if(name.trim().length === 0){
+
+    if(name.trim().length !== 0){
       if (!/^[a-zA-Z_ ]+$/.test(name)) {
         return res.status(400).send({ status: false, msg: "Enter valid name" });
       }
@@ -57,6 +57,10 @@ const createIntern = async function (req, res) {
     let getCollege = await collegeModel.findOne({name: collegeName});
     if(!getCollege){
         return res.status(400).send({status: false, msg: "No college is listed with that College name"});
+    }
+    let deleted = await collegeModel.find({_id: getCollege._id, isDeleted: true})
+    if(deleted){
+      return res.status(400).send({status: false, msg: "Presently the college is not accepting any interns"})
     }
 
     let result = {
