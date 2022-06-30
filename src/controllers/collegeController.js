@@ -42,7 +42,7 @@ const createCollege = async function (req, res) {
       return res.status(400).send({ status: false, msg: "Enter a valid logolink." });
     }
     // ---------[Checking whether unique attributes are present in the DB or not]-----------
-
+ 
 
     let getCollegeName = await collegeModel.findOne({ name })
     if (getCollegeName) {
@@ -50,8 +50,10 @@ const createCollege = async function (req, res) {
     }
     ///========================creating college with the given inputs=============================//////
 
-    let collegeData = await (await collegeModel.create(data));
-    res.status(201).send({ status: true, msg: "College Created successfully", data: collegeData, });
+    let collegeData = await collegeModel.create(data);
+    
+    let Data= await collegeModel.find(collegeData).select({name:1,fullName:1,logoLink:1,isDeleted:1,_id:0})
+    res.status(201).send({ status: true, msg: "College Created successfully", data:Data, });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }
