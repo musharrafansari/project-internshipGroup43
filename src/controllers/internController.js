@@ -1,5 +1,4 @@
 const internModel = require("../models/internModel");
-const mongoose = require("mongoose");
 const collegeModel = require("../models/collegeModel");
 
 const createIntern = async function (req, res) {
@@ -10,10 +9,8 @@ const createIntern = async function (req, res) {
       return res.status(400).send({ status: false, msg: "You must enter data." });
     }
     
-    const { name, email, mobile, collegeName, isDeleted } = data;
-    if(!isDeleted){
-      data.isDeleted = false;
-    }
+    const { name, email, mobile, collegeName } = data;
+   
     //--------------------[checking whether all the required inputs are given or not]-------------------------
     if (!name) {
       return res.status(400).send({ status: false, msg: "Name field if missing" });
@@ -58,13 +55,8 @@ const createIntern = async function (req, res) {
     if(!getCollege){
         return res.status(400).send({status: false, msg: "No college is listed with that College name"});
     }
-    let deleted = await collegeModel.find({_id: getCollege._id, isDeleted: true})
-    if(deleted){
-      return res.status(400).send({status: false, msg: "Presently the college is not accepting any interns"})
-    }
-
+   
     let result = {
-      isDeleted: data.isDeleted,
       name: name,
       email: email,
       mobile: mobile,
@@ -72,7 +64,8 @@ const createIntern = async function (req, res) {
     }
 
     let internData = await internModel.create(result);
-    res.status(201).send({status: true, msg: "Intern Created successfully", data: internData});
+    let updateData = await internModel.find(internData).select({name:1,email:1,mobile:1,collegeId:1})
+    res.status(201).send({status: true, msg: "Intern Created successfully", document: updateData});
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
   }

@@ -2,14 +2,6 @@ const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
 const { default: mongoose } = require("mongoose");
 
-//----------------------------------Validation Functions]-----------------------------------------
-
-// const isValid = function (value) {
-//   if (typeof value === "undefined" || value === null) return false;
-//   if (typeof value === "string" && value.trim().length === 0) return false;
-//   if (typeof value === Number && value.trim().length === 0) return false;
-//   return true;
-// };
 //----------------------------------[Create College]----------------------------------------------
 
 const createCollege = async function (req, res) {
@@ -36,12 +28,13 @@ const createCollege = async function (req, res) {
       if (!/^[a-z A-Z]+(-[a-z A-Z]+)?$/.test(name)) {
         return res.status(400).send({ status: false, msg: "Enter valid name" });
       }
-    }else return res.status(400).send({ status: false, msg: "Enter valid Full name" });
+    }else return res.status(400).send({ status: false, msg: " Opps! invalid  name" });
+
     if(fullName.trim().length !== 0){
       if (!/^[a-zA-Z_ ]+$/.test(fullName)) {
         return res.status(400).send({ status: false, msg: "Enter valid Full name" });
       }
-    }else return res.status(400).send({ status: false, msg: "Enter valid Full name" });
+    }else return res.status(400).send({ status: false, msg: "  Opps! invalid Full name" });
 
     if (!/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/.test(logoLink)) {
       return res.status(400).send({ status: false, msg: "Enter a valid logolink" });
@@ -56,7 +49,7 @@ const createCollege = async function (req, res) {
 
     let collegeData = await collegeModel.create(data);
     
-    let responseData= await collegeModel.find(collegeData).select({name:1, fullName:1 ,logoLink:1, isDeleted:1, _id:0})
+    let responseData= await collegeModel.find(collegeData).select({name:1, fullName:1 ,logoLink:1, isDeleted:1, })
     res.status(201).send({ status: true, msg: "College Created successfully", data: responseData });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
@@ -74,12 +67,15 @@ const collegeDetails = async function (req, res) {
   //---------------------------[finding the college document with the college name]---------------------------------
 
   let collegeDetails = await collegeModel.findOne({ name: collegeName });
+  //  res.send({collegeDetails})
+
   if (!collegeDetails) {
     return res.status(400).send({ status: false, msg: "College is not listed" });
   }
   //-----------------------------finding the intern document with the college document id]-----------------------------------------
 
   let internDetails = await internModel.find({ collegeId: collegeDetails._id }).select({ name: 1, email: 1, mobile: 1, _id: 1 });
+  res.send({internDetails})
   if (internDetails.length==0) { return res.status(400).send({ status: false, msg: "No intern has applied for this college" }) }
 
   let result = {
@@ -88,7 +84,7 @@ const collegeDetails = async function (req, res) {
     logoLink: collegeDetails.logoLink,
     interns: internDetails,
   };
-  res.status(200).send({ status: true, data: result });
+  // res.status(200).send({ status: true, data: result });
 };
 
 module.exports = { createCollege, collegeDetails };
