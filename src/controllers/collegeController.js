@@ -28,13 +28,13 @@ const createCollege = async function (req, res) {
       if (!/^[a-zA-Z]+(-[a-zA-Z]+)?$/.test(name)) {
         return res.status(400).send({ status: false, msg: "Enter valid name" });
       }
-    }else return res.status(400).send({ status: false, msg: "Name field has no value" });
+   }else return res.status(400).send({ status: false, msg: " Opps! invalid  name" });
 
     if(fullName.trim().length !== 0){
       if (!/^[a-zA-Z_ ,]+$/.test(fullName)) {
         return res.status(400).send({ status: false, msg: "Enter valid Full name" });
       }
-    }else return res.status(400).send({ status: false, msg: "Fullname field has no value." });
+    }else return res.status(400).send({ status: false, msg: "  Opps! invalid Full name" });
 
     if (!/(http|https(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|jpeg)/.test(logoLink)) {
       return res.status(400).send({ status: false, msg: "Enter a valid logolink" });
@@ -47,7 +47,7 @@ const createCollege = async function (req, res) {
     }
     //-------------------------[creating college document with the given inputs]--------------------------------------
 
-    let collegeData = await collegeModel.create(data);    
+    let collegeData = await collegeModel.create(data);
     res.status(201).send({ status: true, data: collegeData });
   } catch (err) {
     res.status(500).send({ status: false, msg: err.message });
@@ -78,6 +78,8 @@ const collegeDetails = async function (req, res) {
   //---------------------------[finding the college document with the college name]---------------------------------
 
   let collegeDetails = await collegeModel.findOne({ name: collegeName });
+  //  res.send({collegeDetails})
+
   if (!collegeDetails) {
     return res.status(400).send({ status: false, msg: "College is not listed" });
   }
@@ -94,7 +96,7 @@ const collegeDetails = async function (req, res) {
     logoLink: collegeDetails.logoLink,
     interns: internDetails,
   };
-  res.status(200).send({ status: true, data: result });
+  // res.status(200).send({ status: true, data: result });
 };
 
 module.exports = { createCollege, collegeDetails };
