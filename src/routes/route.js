@@ -8,3 +8,7 @@ router.post("/functionup/interns", internController.createIntern);          //cr
 router.get("/functionup/collegeDetails", collegeController.collegeDetails); //get college document along with the intern's details
 
 module.exports = router;
+
+
+//Amazon s3 Link    https://functionup-stg.s3.ap-south-1.amazonaws.com/thorium/_____.png|jpeg|jpg
+//aasc.jpg
