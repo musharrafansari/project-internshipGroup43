@@ -38,7 +38,7 @@ const createIntern = async function (req, res) {
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       return res.status(400).send({ status: false, msg: "Enter a valid emailId" });
     }
-    if (!/^\d{10}$/.test(mobile)) {
+    if (!/[1-9][0-9]\d{10}$/.test(mobile)) {
       return res.status(400).send({ status: false, msg: "Enter valid mobile no" });
     }
     
@@ -57,10 +57,6 @@ const createIntern = async function (req, res) {
     let getCollege = await collegeModel.findOne({name: collegeName});
     if(!getCollege){
         return res.status(400).send({status: false, msg: "No college is listed with that College name"});
-    }
-    let deleted = await collegeModel.find({_id: getCollege._id, isDeleted: true})
-    if(deleted){
-      return res.status(400).send({status: false, msg: "Presently the college is not accepting any interns"})
     }
 
     let result = {
