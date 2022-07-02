@@ -57,6 +57,9 @@ const createIntern = async function (req, res) {
         if (!getCollege) {
             return res.status(400).send({status: false, msg: "No college is listed with that College name"});
         }
+        if (getCollege.isDeleted == true) {
+            return res.status(400).send({status: false, msg: "Presently the college is not accepting any interns"});
+        }
 
         let result = {
             name: name,

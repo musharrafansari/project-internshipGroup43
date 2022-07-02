@@ -1,6 +1,6 @@
 const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 //----------------------------------[Create College]----------------------------------------------
 
