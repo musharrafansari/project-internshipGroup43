@@ -65,7 +65,7 @@ const collegeDetails = async function (req, res) {
 
   let collegeName = req.query.collegeName;
 
-  if (Object.keys(queryData).length > 1){
+  if (Object.keys(queryData).length > 1){ 
     return res.status(400).send({ status: false, message: "Please include college name key only"});
   }
   if(!collegeName){
